@@ -19,4 +19,9 @@ def drop(event):
 pdf_entry.drop_target_register(DND_FILES)
 pdf_entry.dnd_bind("<<Drop>>", drop)
 
+def load_pdf_text(file_path):
+    loader = PyPDFLoader(file_path)
+    documents = loader.load()
+    return documents
+
 root.mainloop()
