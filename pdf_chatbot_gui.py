@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinterdnd2 import TkinterDnD, DND_FILES
+from langchain_community.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-
 
 root = TkinterDnD.Tk()
 root.title("RAG PDF Chatbot")
@@ -33,6 +33,5 @@ def chunk_documents(documents):
     )
     chunks = splitter.split_documents(documents)
     return chunks
-
 
 root.mainloop()
