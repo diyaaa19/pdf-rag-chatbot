@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinterdnd2 import TkinterDnD, DND_FILES
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
+from langchain_google_genai import GoogleGenerativeAIEmbeddings
 
 root = TkinterDnD.Tk()
 root.title("RAG PDF Chatbot")
@@ -33,5 +34,11 @@ def chunk_documents(documents):
     )
     chunks = splitter.split_documents(documents)
     return chunks
+
+def create_embeddings():
+    embeddings = GoogleGenerativeAIEmbeddings(
+        model="models/embedding-001"
+    )
+    return embeddings
 
 root.mainloop()
