@@ -3,6 +3,7 @@ from tkinterdnd2 import TkinterDnD, DND_FILES
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
+from langchain_community.vectorstores import FAISS
 
 root = TkinterDnD.Tk()
 root.title("RAG PDF Chatbot")
@@ -40,5 +41,9 @@ def create_embeddings():
         model="models/embedding-001"
     )
     return embeddings
+
+def create_vectorstore(chunks, embeddings):
+    db = FAISS.from_documents(chunks, embeddings)
+    return db
 
 root.mainloop()
