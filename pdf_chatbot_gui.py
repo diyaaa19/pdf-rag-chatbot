@@ -2,8 +2,12 @@ import tkinter as tk
 from tkinterdnd2 import TkinterDnD, DND_FILES
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain_google_genai import GoogleGenerativeAIEmbeddings
+from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_community.vectorstores import FAISS
+from tkinter import scrolledtext
+
+
+vector_db = None
 
 root = TkinterDnD.Tk()
 root.title("RAG PDF Chatbot")
@@ -37,13 +41,29 @@ def chunk_documents(documents):
     return chunks
 
 def create_embeddings():
-    embeddings = GoogleGenerativeAIEmbeddings(
-        model="models/embedding-001"
+    embeddings = HuggingFaceEmbeddings(
+        model_name="sentence-transformers/all-MiniLM-L6-v2"
     )
     return embeddings
 
 def create_vectorstore(chunks, embeddings):
     db = FAISS.from_documents(chunks, embeddings)
     return db
+
+def load_pdf():
+    global vector_db
+
+    file_path = pdf_entry.get()
+
+    documents = load_pdf_text(file_path)
+    chunks = chunk_documents(documents)
+    embeddings = create_embeddings()
+    vector_db = create_vectorstore(chunks, embeddings)
+
+load_button = tk.Button(root, text="Load PDF", command=load_pdf)
+load_button.pack(pady=5)
+chat_box = scrolledtext.ScrolledText(root, width=80, height=20)
+chat_box.pack(pady=10)
+
 
 root.mainloop()
