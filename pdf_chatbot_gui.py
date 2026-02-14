@@ -64,6 +64,10 @@ load_button = tk.Button(root, text="Load PDF", command=load_pdf)
 load_button.pack(pady=5)
 chat_box = scrolledtext.ScrolledText(root, width=80, height=20)
 chat_box.pack(pady=10)
+question_entry = tk.Entry(root, width=60)
+question_entry.pack(side=tk.LEFT, padx=5, pady=5)
+ask_button = tk.Button(root, text="Ask")
+ask_button.pack(side=tk.LEFT)
 
 
 root.mainloop()
