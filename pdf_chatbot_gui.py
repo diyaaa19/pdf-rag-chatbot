@@ -65,6 +65,16 @@ def load_pdf():
     embeddings = create_embeddings()
     vector_db = create_vectorstore(chunks, embeddings)
 
+def retrieve_documents(query):
+    global vector_db
+
+    if vector_db is None:
+        return []
+
+    retriever = vector_db.as_retriever(search_kwargs={"k": 4})
+    docs = retriever.invoke(query)
+    return docs
+
 load_button = tk.Button(root, text="Load PDF", command=load_pdf)
 load_button.pack(pady=5)
 chat_box = scrolledtext.ScrolledText(root, width=80, height=20)
