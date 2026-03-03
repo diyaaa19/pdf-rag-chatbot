@@ -7,7 +7,6 @@ from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_community.vectorstores import FAISS
 from tkinter import scrolledtext
 
-
 vector_db = None
 llm = ChatGoogleGenerativeAI(
     model="gemini-1.5-flash",
@@ -17,6 +16,7 @@ llm = ChatGoogleGenerativeAI(
 root = TkinterDnD.Tk()
 root.title("RAG PDF Chatbot")
 root.geometry("700x600")
+
 
 title = tk.Label(root, text="RAG PDF Chatbot", font=("Arial", 16))
 title.pack(pady=10)
@@ -47,7 +47,7 @@ def chunk_documents(documents):
 
 def create_embeddings():
     embeddings = HuggingFaceEmbeddings(
-        model_name="sentence-transformers/all-MiniLM-L6-v2"
+        model_name="all-MiniLM-L6-v2"
     )
     return embeddings
 
@@ -75,14 +75,51 @@ def retrieve_documents(query):
     docs = retriever.invoke(query)
     return docs
 
+def ask_question():
+    question = question_entry.get()
+
+    if not question:
+        return
+
+    chat_box.insert(tk.END, f"You: {question}\n")
+
+    docs = retrieve_documents(question)
+
+    if not docs:
+        chat_box.insert(tk.END, "Bot: Please load a PDF first.\n\n")
+        return
+
+    context = "\n\n".join([doc.page_content for doc in docs])
+
+    prompt = f"""
+Use the context below to answer the question.
+If the answer is not in the context, say you don't know.
+
+Context:
+{context}
+
+Question:
+{question}
+
+Answer:
+"""
+
+    response = llm.invoke(prompt)
+
+    chat_box.insert(tk.END, f"Bot: {response.content}\n\n")
+
+    question_entry.delete(0, tk.END)
+
+
 load_button = tk.Button(root, text="Load PDF", command=load_pdf)
 load_button.pack(pady=5)
 chat_box = scrolledtext.ScrolledText(root, width=80, height=20)
 chat_box.pack(pady=10)
 question_entry = tk.Entry(root, width=60)
 question_entry.pack(side=tk.LEFT, padx=5, pady=5)
-ask_button = tk.Button(root, text="Ask")
+ask_button = tk.Button(root, text="Ask", command=ask_question)
 ask_button.pack(side=tk.LEFT)
 
 
 root.mainloop()
+
