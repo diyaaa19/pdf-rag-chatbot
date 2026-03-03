@@ -1,15 +1,15 @@
 import tkinter as tk
 from tkinterdnd2 import TkinterDnD, DND_FILES
-from langchain_community.chat_models import ChatGoogleGenerativeAI
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_community.vectorstores import FAISS
 from tkinter import scrolledtext
+from langchain_ollama import ChatOllama
 
 vector_db = None
-llm = ChatGoogleGenerativeAI(
-    model="gemini-1.5-flash",
+llm = ChatOllama(
+    model="tinyllama",
     temperature=0.2
 )
 
