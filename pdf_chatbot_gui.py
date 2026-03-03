@@ -10,7 +10,8 @@ from langchain_ollama import ChatOllama
 vector_db = None
 llm = ChatOllama(
     model="tinyllama",
-    temperature=0.2
+    temperature=0.2,
+    num_ctx=1024
 )
 
 root = TkinterDnD.Tk()
@@ -39,8 +40,8 @@ def load_pdf_text(file_path):
 
 def chunk_documents(documents):
     splitter = RecursiveCharacterTextSplitter(
-        chunk_size=1000,
-        chunk_overlap=200
+        chunk_size=500,
+        chunk_overlap=50
     )
     chunks = splitter.split_documents(documents)
     return chunks
